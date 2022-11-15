@@ -119,7 +119,7 @@ TASKS = [
     ),
 ]
 
-MASTER_COPIES: Dict[EthereumNetwork, List[Tuple[str, int, str]]] = {
+MASTER_COPIES: Dict[str, List[Tuple[str, int, str]]] = {
     EthereumNetwork.MAINNET: [
         ("0x3E5c63644E683549055b9Be8653de26E0B4CD36E", 12504423, "1.3.0+L2"),
         ("0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552", 12504268, "1.3.0"),
@@ -300,14 +300,6 @@ MASTER_COPIES: Dict[EthereumNetwork, List[Tuple[str, int, str]]] = {
     EthereumNetwork.KLAY_CYPRESS: [
         ("0xfb1bffC9d739B8D520DaF37dF666da4C687191EA", 93507490, "1.3.0+L2"),
     ],
-    EthereumNetwork.MILKOMEDA_A1_TESTNET: [
-        ("0x3E5c63644E683549055b9Be8653de26E0B4CD36E", 796, "1.3.0+L2"),
-        ("0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552", 797, "1.3.0"),
-    ],
-    EthereumNetwork.MILKOMEDA_A1_MAINNET: [
-        ("0x3E5c63644E683549055b9Be8653de26E0B4CD36E", 6218, "1.3.0+L2"),
-        ("0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552", 6042, "1.3.0"),
-    ],
     EthereumNetwork.MILKOMEDA_C1_TESTNET: [
         ("0x3E5c63644E683549055b9Be8653de26E0B4CD36E", 5080339, "1.3.0+L2"),
         ("0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552", 5080357, "1.3.0"),
@@ -340,17 +332,12 @@ MASTER_COPIES: Dict[EthereumNetwork, List[Tuple[str, int, str]]] = {
         ("0x3E5c63644E683549055b9Be8653de26E0B4CD36E", 12147586, "1.3.0+L2"),
         ("0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552", 12147596, "1.3.0"),
     ],
-    EthereumNetwork.PUBLICMINT_MAINNET: [
-        ("0x3E5c63644E683549055b9Be8653de26E0B4CD36E", 19974991, "1.3.0+L2"),
-        ("0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552", 19974993, "1.3.0"),
-    ],
-    EthereumNetwork.PUBLICMINT_TESTNET: [
-        ("0x3E5c63644E683549055b9Be8653de26E0B4CD36E", 14062206, "1.3.0+L2"),
-        ("0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552", 14062208, "1.3.0"),
-    ],
+    '43214913': [
+        ("0x33D1d44F564F9900C253d665C8bE5B78B015d20f", 0, "1.3.0+L2")
+    ]
 }
 
-PROXY_FACTORIES: Dict[EthereumNetwork, List[Tuple[str, int]]] = {
+PROXY_FACTORIES: Dict[str, List[Tuple[str, int]]] = {
     EthereumNetwork.MAINNET: [
         ("0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2", 12504126),  # v1.3.0
         ("0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B", 9084508),  # v1.1.1
@@ -484,12 +471,6 @@ PROXY_FACTORIES: Dict[EthereumNetwork, List[Tuple[str, int]]] = {
     EthereumNetwork.KLAY_CYPRESS: [
         ("0xC22834581EbC8527d974F8a1c97E1bEA4EF910BC", 93506870),  # v1.3.0
     ],
-    EthereumNetwork.MILKOMEDA_A1_TESTNET: [
-        ("0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2", 789),  # v1.3.0
-    ],
-    EthereumNetwork.MILKOMEDA_A1_MAINNET: [
-        ("0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2", 6218),  # v1.3.0
-    ],
     EthereumNetwork.MILKOMEDA_C1_TESTNET: [
         ("0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2", 5080303),  # v1.3.0
     ],
@@ -514,12 +495,9 @@ PROXY_FACTORIES: Dict[EthereumNetwork, List[Tuple[str, int]]] = {
     EthereumNetwork.KCC_TESTNET: [
         ("0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2", 12147567),  # v1.3.0
     ],
-    EthereumNetwork.PUBLICMINT_MAINNET: [
-        ("0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2", 19974979),  # v1.3.0
-    ],
-    EthereumNetwork.PUBLICMINT_TESTNET: [
-        ("0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2", 14062193),  # v1.3.0
-    ],
+    '43214913': [
+        ("0x33A67ce4B5EA379E2687b437e5E5A810469Af957", 0),  # v1.3.0
+    ]
 }
 
 
@@ -546,22 +524,22 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS("Setting up Safe Contract Addresses"))
         ethereum_client = EthereumClientProvider()
-        ethereum_network = ethereum_client.get_network()
-        if ethereum_network in MASTER_COPIES:
+        ethereum_network_id = ethereum_client.w3.net.version
+        if ethereum_network_id in MASTER_COPIES:
             self.stdout.write(
-                self.style.SUCCESS(f"Setting up {ethereum_network.name} safe addresses")
+                self.style.SUCCESS(f"Setting up Maistestsubnet safe addresses")
             )
-            self._setup_safe_master_copies(MASTER_COPIES[ethereum_network])
-        if ethereum_network in PROXY_FACTORIES:
+            self._setup_safe_master_copies(MASTER_COPIES[ethereum_network_id])
+        if ethereum_network_id in PROXY_FACTORIES:
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"Setting up {ethereum_network.name} proxy factory addresses"
+                    f"Setting up Maistestsubnet proxy factory addresses"
                 )
             )
-            self._setup_safe_proxy_factories(PROXY_FACTORIES[ethereum_network])
+            self._setup_safe_proxy_factories(PROXY_FACTORIES[ethereum_network_id])
 
         if not (
-            ethereum_network in MASTER_COPIES and ethereum_network in PROXY_FACTORIES
+            ethereum_network_id in MASTER_COPIES and ethereum_network_id in PROXY_FACTORIES
         ):
             self.stdout.write(
                 self.style.WARNING("Cannot detect a valid ethereum-network")
@@ -599,3 +577,4 @@ class Command(BaseCommand):
                     "tx_block_number": initial_block_number,
                 },
             )
+            
