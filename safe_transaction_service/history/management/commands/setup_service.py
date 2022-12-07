@@ -334,6 +334,9 @@ MASTER_COPIES: Dict[str, List[Tuple[str, int, str]]] = {
     ],
     '43214913': [
         ("0x33D1d44F564F9900C253d665C8bE5B78B015d20f", 0, "1.3.0+L2")
+    ],
+    '13812': [
+        ("0xc15F1371b76cE42A415A076e56F6859C65E2e888", 200, "1.3.0+L2")
     ]
 }
 
@@ -497,6 +500,9 @@ PROXY_FACTORIES: Dict[str, List[Tuple[str, int]]] = {
     ],
     '43214913': [
         ("0x33A67ce4B5EA379E2687b437e5E5A810469Af957", 0),  # v1.3.0
+    ],
+    '13812': [
+        ("0x167c17F73F86D58ACc4Ac5738e61F00580a6433a", 192)
     ]
 }
 
